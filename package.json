@@ -1,0 +1,20 @@
+{
+  "name": "playwright-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "wait:api": "node wait-for-api.js",
+    "test:api": "npm run wait:api && playwright test tests/api",
+    "test": "npm run wait:api && playwright test"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "typescript": "^5.9.3"
+  }
+}

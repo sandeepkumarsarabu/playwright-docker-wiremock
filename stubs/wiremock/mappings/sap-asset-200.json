@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/sap/assets/.*"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "assetId": "ASSET-1001",
+      "location": "Eindhoven",
+      "status": "ACTIVE"
+    }
+  }
+}

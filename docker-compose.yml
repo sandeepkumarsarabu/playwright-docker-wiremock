@@ -1,0 +1,26 @@
+services:
+  wiremock:
+    image: wiremock/wiremock:3.9.1
+    command: ["--port", "8081", "--verbose"]
+    volumes:
+      - ./stubs/wiremock/mappings:/home/wiremock/mappings
+    ports:
+      - "8081:8081"
+
+  api:
+    build:
+      context: ./apps/api-dotnet
+    environment:
+      - SAP_STUB_URL=http://wiremock:8081
+    depends_on:
+      - wiremock
+    ports:
+      - "8080:8080"
+
+  ui:
+    build:
+      context: ./apps/ui-web
+    depends_on:
+      - api
+    ports:
+      - "3000:80"

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Asset Viewer</title>
+</head>
+<body>
+  <h1>Asset Viewer</h1>
+
+  <button id="loadBtn">Load Asset</button>
+
+  <pre id="result">No data</pre>
+
+  <script>
+  document.getElementById("loadBtn").onclick = async () => {
+    const resultEl = document.getElementById("result");
+    resultEl.textContent = "Loading...";
+
+    try {
+      const response = await fetch("http://127.0.0.1:8080/api/assets/ASSET-1001");
+
+      if (!response.ok) {
+        throw new Error("API returned status " + response.status);
+      }
+
+      const data = await response.json();
+      resultEl.textContent = JSON.stringify(data, null, 2);
+
+    } catch (error) {
+      resultEl.textContent = "ERROR: " + error.message;
+    }
+  };
+</script>
+
+</body>
+</html>
