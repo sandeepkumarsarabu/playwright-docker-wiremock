@@ -19,6 +19,8 @@ playwright-tests:
       - npx playwright test --reporter=html || true
       - test -d playwright-report || mkdir -p playwright-report
   after_script:
+    - mkdir -p playwright-report
+    - if [ ! -f playwright-report/index.html ]; then echo "Playwright report not generated (job may have failed before report creation)." > playwright-report/README.txt; fi
     - docker compose logs --no-color || true
     - docker compose down || true
   artifacts:
