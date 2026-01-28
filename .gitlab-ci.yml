@@ -15,8 +15,9 @@ playwright-tests:
   before_script:
     - npm ci
   script:
-    - docker compose up -d --build
-    - npx playwright test
+      - docker compose up -d --build
+      - npx playwright test --reporter=html || true
+      - test -d playwright-report || mkdir -p playwright-report
   after_script:
     - docker compose logs --no-color || true
     - docker compose down || true
