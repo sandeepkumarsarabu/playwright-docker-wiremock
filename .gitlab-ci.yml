@@ -27,7 +27,6 @@ playwright-tests:
 
   after_script:
     - mkdir -p playwright-report
-    - if [ ! -f playwright-report/index.html ]; then echo "Playwright report not generated." > playwright-report/README.txt; fi
     - docker compose logs --no-color || true
     - docker compose down || true
 
