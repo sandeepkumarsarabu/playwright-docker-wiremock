@@ -51,4 +51,3 @@ playwright-tests:
     paths:
       - playwright-report/
     expire_in: 7 days
-``
