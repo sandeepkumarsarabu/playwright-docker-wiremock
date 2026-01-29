@@ -12,12 +12,14 @@ stages:
 
 playwright-tests:
   stage: test
+  variables:
+    BASE_URL: "http://docker:3000"
+    API_BASE_URL: "http://docker:8080"
   before_script:
     - npm ci
   script:
-      - docker compose up -d --build
-      - npx playwright test --reporter=html || true
-      - test -d playwright-report || mkdir -p playwright-report
+    - docker compose up -d --build
+    - npx playwright test --reporter=html
   after_script:
     - mkdir -p playwright-report
     - if [ ! -f playwright-report/index.html ]; then echo "Playwright report not generated (job may have failed before report creation)." > playwright-report/README.txt; fi
