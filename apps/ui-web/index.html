@@ -15,8 +15,12 @@
     const resultEl = document.getElementById("result");
     resultEl.textContent = "Loading...";
 
+    // ✅ Works locally (127.0.0.1) AND in CI (docker)
+    const apiHost = window.location.hostname;
+    const apiUrl = `http://${apiHost}:8080/api/assets/ASSET-1001`;
+
     try {
-      const response = await fetch("http://127.0.0.1:8080/api/assets/ASSET-1001");
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
         throw new Error("API returned status " + response.status);
@@ -29,7 +33,7 @@
       resultEl.textContent = "ERROR: " + error.message;
     }
   };
-</script>
+</script>>
 
 </body>
 </html>
