@@ -1,13 +1,16 @@
 image: mcr.microsoft.com/playwright:v1.57.0-jammy
 
 services:
-  - name: docker:24.0-dind
-    # Align service with no-TLS client settings
+  - name: docker:29.0-dind
+    # No TLS to match the client variables below
     command: ["--tls=false"]
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
+  # Optional quality-of-life/perf:
+  # DOCKER_BUILDKIT: "1"
+  # COMPOSE_DOCKER_CLI_BUILD: "1"
 
 stages:
   - test
@@ -26,23 +29,27 @@ playwright-tests:
     - apt-get update -y
     - apt-get install -y docker-ce-cli docker-compose-plugin
 
-    # 2) Install Node dependencies (Playwright image already has Node + browsers)
+    # 2) Wait for DinD daemon to be ready (avoid flakiness on cold starts)
+    - |
+      for i in {1..30}; do
+        if docker info >/dev/null 2>&1; then
+          echo "Docker daemon is ready"; break
+        else
+          echo "Waiting for Docker daemon... ($i/30)"; sleep 1
+        fi
+      done
+
+    # 3) Node deps (Playwright image ships Node + browsers)
     - npm ci
 
   script:
-    # Optional diagnostics
     - docker version
     - docker compose version
-
-    # Bring up your docker-compose stack (ensure a docker-compose.yml is present)
     - docker compose up -d --build
-
-    # Run Playwright tests and generate the HTML report
     - npx playwright test --reporter=html
 
   after_script:
     - mkdir -p playwright-report
-    # Capture logs even if something fails
     - docker compose logs --no-color || true
     - docker compose down || true
 
