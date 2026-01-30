@@ -9,6 +9,9 @@ variables:
 
 stages:
   - test
+  variables:
+    BASE_URL: "http://docker:3000"
+    API_BASE_URL: "http://docker:8080"
 
 playwright-tests:
   stage: test
