@@ -6,13 +6,11 @@ services:
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
+  BASE_URL: "http://docker:3000"
+  API_BASE_URL: "http://docker:8080"
 
 stages:
   - test
-  variables:
-    BASE_URL: "http://docker:3000"
-    API_BASE_URL: "http://docker:8080"
-
 playwright-tests:
   stage: test
   before_script:
