@@ -8,9 +8,11 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   BASE_URL: "http://docker:3000"
   API_BASE_URL: "http://docker:8080"
+  echo "-----setting variables----"
 
 stages:
   - test
+   echo "-------------------In test stage--------------------"
 
 playwright-tests:
   stage: test
