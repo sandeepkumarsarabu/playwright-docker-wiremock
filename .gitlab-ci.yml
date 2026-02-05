@@ -11,22 +11,52 @@ variables:
 
 stages:
   - test
+
 playwright-tests:
   stage: test
+
   before_script:
+    # Install Docker CLI + docker-compose (v1)
     - apt-get update
     - apt-get install -y docker.io docker-compose curl
+
+    # Install Node dependencies
     - npm ci
+
   script:
+    # Sanity checks
     - docker version
     - docker-compose version
-    - docker-compose up -d --build
+
+    # Start application stack
+    - docker-compose up -d
+
+    # Wait for API to be healthy (prevents flaky failures)
+    - |
+      for i in {1..60}; do
+        if curl -sf http://docker:8080/health > /dev/null; then
+          echo "API is healthy"
+          break
+        fi
+        echo "Waiting for API..."
+        sleep 2
+      done
+
+    # Run Playwright tests
     - npx playwright test --reporter=html
+
   after_script:
+    # Ensure artifacts always exist (does NOT affect job result)
     - mkdir -p playwright-report
-    - if [ ! -f playwright-report/index.html ]; then echo "Playwright report not generated." > playwright-report/README.txt; fi
+    - |
+      if [ ! -f playwright-report/index.html ]; then
+        echo "Playwright report not generated (tests failed before report creation)." > playwright-report/README.txt
+      fi
+
+    # Logs + cleanup
     - docker-compose logs --no-color || true
     - docker-compose down || true
+
   artifacts:
     when: always
     paths:
