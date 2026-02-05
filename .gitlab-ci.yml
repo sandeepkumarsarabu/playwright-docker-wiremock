@@ -46,7 +46,7 @@ playwright-tests:
     - npx playwright test --reporter=html
 
   after_script:
-    # Ensure artifacts always exist (does NOT affect job result)
+    # Ensure artifacts always exist ((does NOT affect job result))
     - mkdir -p playwright-report
     - |
       if [ ! -f playwright-report/index.html ]; then
